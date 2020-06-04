@@ -29,3 +29,39 @@
 <br>
 
 <%= link_to 'New Map', new_map_path %>
+
+<div id=map></div>
+
+<script type="text/javascript">
+
+function initMap() {
+  var locations = gon.maps;
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 12,
+    center: { lat: 34.6842571, lng: 135.5110531 },
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+
+  var infowindow = new google.maps.InfoWindow;
+  var marker, i;
+
+  for (var i = 0; i < locations.length; i++) {
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(locations[i]["latitude"], locations[i]["longitude"]),
+      map: map
+
+    });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent(locations[i]["address"]);
+        infowindow.open(map, marker);
+      }
+    })(marker, i));
+  }
+}
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=<%= ENV['GOOGLE_MAP_API'] %>&callback=initMap">
+</script>

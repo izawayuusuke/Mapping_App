@@ -5,6 +5,7 @@ class MapsController < ApplicationController
   # GET /maps.json
   def index
     @maps = Map.all
+    gon.maps = Map.all
   end
 
   # GET /maps/1
